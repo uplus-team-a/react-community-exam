@@ -2,25 +2,25 @@
 
 2000년대 초반, 컴퓨터가 본격적으로 보급되면서 개발자들은 코드를 다음과 같이 관리하곤 했습니다.
 
-* 개발은 혼자 하는 게 아닙니다. 여러 사람이 하나의 프로젝트에서 **같은 코드를 동시에 수정**합니다.
-* 모든 코드는 하나의 원본으로 계속해서 통합되어야 하며(CI: Continuous Integration), 누가 언제 어떤 코드를 수정했는지 추적 가능해야 합니다.
+- 개발은 혼자 하는 게 아닙니다. 여러 사람이 하나의 프로젝트에서 **같은 코드를 동시에 수정**합니다.
+- 모든 코드는 하나의 원본으로 계속해서 통합되어야 하며(CI: Continuous Integration), 누가 언제 어떤 코드를 수정했는지 추적 가능해야 합니다.
 
 예전에는 이런 식으로 파일을 관리했습니다:
 
 ```
-프로젝트.zip  
-프로젝트_초기버전_.zip  
-프로젝트_초기버전_철수_수정.zip  
-프로젝트_최종_보고용.zip  
-프로젝트_최종_보고용_1227_수정.zip  
-프로젝트_최종_보고용_0115_최종.zip  
-프로젝트_최종_보고용_0221_최종_진짜진짜진짜.zip  
+프로젝트.zip
+프로젝트_초기버전_.zip
+프로젝트_초기버전_철수_수정.zip
+프로젝트_최종_보고용.zip
+프로젝트_최종_보고용_1227_수정.zip
+프로젝트_최종_보고용_0115_최종.zip
+프로젝트_최종_보고용_0221_최종_진짜진짜진짜.zip
 ```
 
 이러한 귀찮은 작업을 반복하던 리눅스의 창시자 **Linus Torvalds**는 열받아서 2005년에 무료 CI 도구를 만들었고, 그것이 바로 **Git**입니다.
 
-* [Git 공식 홈페이지](https://git-scm.com/)에서 Git을 설치하고 프로젝트를 추적하기 시작하면, 아래와 같이 버전이 체계적으로 관리됩니다.
-* 단, Git은 기본적으로 \*\*로컬(내 컴퓨터)\*\*에서만 작동합니다. 다른 사람과 공유하려면 GitHub 같은 **원격 저장소**를 사용해야 합니다.
+- [Git 공식 홈페이지](https://git-scm.com/)에서 Git을 설치하고 프로젝트를 추적하기 시작하면, 아래와 같이 버전이 체계적으로 관리됩니다.
+- 단, Git은 기본적으로 \*\*로컬(내 컴퓨터)\*\*에서만 작동합니다. 다른 사람과 공유하려면 GitHub 같은 **원격 저장소**를 사용해야 합니다.
 
 ![img.png](image/img.png)
 
@@ -39,15 +39,15 @@
 예시:
 
 ```
-feat: PROJECT-001 로그인 기능 추가  
-fix: PROJECT-002 로그인 기능 수정  
-refactor: PROJECT-005 로그인 기능 리팩토링  
-bug: PROJECT-007 간헐적으로 서버가 죽는 버그 수정  
-doc: 문서만 수정했음 (티켓 번호 없음)  
-build: 서버 배포용 yml 설정 파일 수정  
+feat: PROJECT-001 로그인 기능 추가
+fix: PROJECT-002 로그인 기능 수정
+refactor: PROJECT-005 로그인 기능 리팩토링
+bug: PROJECT-007 간헐적으로 서버가 죽는 버그 수정
+doc: 문서만 수정했음 (티켓 번호 없음)
+build: 서버 배포용 yml 설정 파일 수정
 ```
 
-![img.png](image/img_4.png)
+![img.png](image/img_4.png)co
 
 ---
 
@@ -55,11 +55,13 @@ build: 서버 배포용 yml 설정 파일 수정
 
 ### 1) 처음 코드 받기 (clone)
 
-로컬에서 처음으로 프로젝트 코드를 받을 때는 `git clone` 명령어를 사용합니다.
+로컬에서 처음으로 프로젝트 코드를 받을 때는 `git clone` 명령어를 사용
 
 ```bash
 $ git clone https://github.com/jiwon/example.git
 ```
+
+//jhfhgfghfgh
 
 ### 2) 브랜치 관련 명령어
 
@@ -85,18 +87,20 @@ $ git remote set-url origin https://github.com/jiwon/example.git
 ```
 
 현재 등록된 원격 저장소 주소를 확인하려면:
+
 - `fetch(다운로드)` `push(업로드)` 주소는 대부분 동일하게 사용합니다.
+
 ```bash
 $ git remote -v
-origin  https://github.com/jiwon/example.git (fetch)  
+origin  https://github.com/jiwon/example.git (fetch)
 origin  https://github.com/jiwon/example.git (push)
 ```
 
 ### 4) 원격 저장소 내용 가져오기
 
 ```bash
-$ git fetch origin  # 코드만 다운로드, 내 로컬에는 반영 안됨  
-$ git pull origin <내 브랜치명>  # fetch + merge 까지 
+$ git fetch origin  # 코드만 다운로드, 내 로컬에는 반영 안됨
+$ git pull origin <내 브랜치명>  # fetch + merge 까지
 $ git pull origin main
 ```
 
@@ -107,15 +111,15 @@ $ git pull origin main
 ### 5) 로컬에서 수정 후 커밋하고 push 하기
 
 ```bash
-$ git add .                         # 수정된 파일을 Git이 추적하게 등록  
-$ git commit -m "커밋 메시지"  
+$ git add .                         # 수정된 파일을 Git이 추적하게 등록
+$ git commit -m "커밋 메시지"
 $ git push origin main             # 원격 저장소로 반영
 ```
 
 ### 6) 자주 쓰는 축약형 명령어
 
 ```bash
-$ git push        # = git push origin <현재 브랜치명>  
+$ git push        # = git push origin <현재 브랜치명>
 $ git pull        # = git pull origin <현재 브랜치명>
 ```
 
@@ -125,13 +129,12 @@ clone 받으면 origin 으로 자동 설정됩니다. 안되면 아래와 같이
 $ git push --set-upstream origin master
 ```
 
-
 # 3. 알아두면 도움되는 Git의 구조:
 
-* 아무것도 등록되지 않은 내 로컬 컴퓨터 (=Working Directory)
-* `git add .` 을 해서 파일 이력 저장 중 (=Staging Area)
-* `git commit` 을 통해 내 로컬 Git에 저장 (=Local Repository)
-* `git push` 를 통해 내 로컬 Git을 Github 서버에 업로드 (=Remote Repository)
+- 아무것도 등록되지 않은 내 로컬 컴퓨터 (=Working Directory)
+- `git add .` 을 해서 파일 이력 저장 중 (=Staging Area)
+- `git commit` 을 통해 내 로컬 Git에 저장 (=Local Repository)
+- `git push` 를 통해 내 로컬 Git을 Github 서버에 업로드 (=Remote Repository)
 
 ![img.png](image/img_3.png)
 
@@ -173,8 +176,8 @@ $ git push -u origin <브랜치명>
 
 참고로 upstream, downstream 이 무엇이냐면
 
-* `upstream`: 원본 저장소 (예: GitHub)
-* `downstream`: 작업하는 내 로컬 저장소
+- `upstream`: 원본 저장소 (예: GitHub)
+- `downstream`: 작업하는 내 로컬 저장소
 
 다른 예로 GitHub에서 다른 프로젝트를 `fork`(복사) 해온 경우, 원본은 `upstream`, 내 저장소는 `origin`이 됩니다. 상대적인 개념이에요.
 
@@ -182,7 +185,7 @@ $ git push -u origin <브랜치명>
 
 ### 3) git push 했더니 fast-forward 오류 발생
 
-![img\_1.png](image/img_1.png)
+![img_1.png](image/img_1.png)
 
 에러 메시지에 나오는 `fast-forward`는 Git에서 실수 방지를 위해 푸시를 막는 설정입니다.
 
@@ -190,14 +193,14 @@ $ git push -u origin <브랜치명>
 
 **해결 방법:**
 
-* 깔끔한 해결책:
+- 깔끔한 해결책:
   **내 커밋을 롤백하고**, 원격 저장소를 pull로 받아 병합한 뒤 다시 commit + push
 
-* 대충 강제로 덮어쓰는 방법:
+- 대충 강제로 덮어쓰는 방법:
 
 ```bash
-$ git pull origin main --allow-unrelated-histories  # 수동 병합 허용  
-$ git push origin main --force                      # 내 로컬 상태를 강제로 덮어쓰기  
+$ git pull origin main --allow-unrelated-histories  # 수동 병합 허용
+$ git push origin main --force                      # 내 로컬 상태를 강제로 덮어쓰기
 # 또는
 $ git push -f
 ```
