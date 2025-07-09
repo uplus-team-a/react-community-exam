@@ -9,6 +9,7 @@ import PostListPage from "./pages/PostListPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
 import WritePage from "./pages/WritePage.jsx";
+import AuthCallback from "./components/AuthCallback.jsx";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "signup",
         element: <SignupPage/>,
+      },
+      {
+        path: "auth/callback",
+        element: <AuthCallback/>,
       },
       // 앞으로 다른 페이지들을 이곳에 추가할 수 있습니다.
       // { path: "login", element: <LoginPage /> }
