@@ -1,11 +1,11 @@
-import { Navigate } from "react-router-dom";
-import { useUserStore } from "../stores/userStore";
+import {Navigate} from "react-router-dom";
+import {useUserStore} from "../stores/userStore";
 
 function ProfilePage() {
   const user = useUserStore((s) => s.user);
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace/>;
   }
 
   return (
@@ -27,7 +27,7 @@ function ProfilePage() {
         <button
           className="btn btn-error mt-4"
           onClick={() => {
-            useUserStore.getState().clearUser();
+            useUserStore.getState().logout();
           }}
         >
           로그아웃
