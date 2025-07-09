@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import {fetchPosts} from "../apis/postApi";
 import Pagination from "../components/Pagination";
-import { fetchPosts } from "../apis/postApi";
+import {useUserStore} from "../stores/userStore.js";
 
 function PostListPage() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const user = useUserStore((state) => state.user);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -17,7 +19,7 @@ function PostListPage() {
       setIsLoading(true);
       setError(null);
       try {
-        const { posts: fetchedPosts, totalCount } = await fetchPosts(
+        const {posts: fetchedPosts, totalCount} = await fetchPosts(
           currentPage,
           itemsPerPage
         );
@@ -58,26 +60,26 @@ function PostListPage() {
       <div className="overflow-x-auto">
         <table className="table table-zebra w-full">
           <thead>
-            <tr>
-              <th>번호</th>
-              <th>제목</th>
-              <th>작성자</th>
-              <th>작성일</th>
-            </tr>
+          <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+          </tr>
           </thead>
           <tbody>
-            {posts.map((post) => (
-              <tr key={post.id} className="hover">
-                <th>{post.id}</th>
-                <td>
-                  <a href="#" className="link link-hover">
-                    {post.title}
-                  </a>
-                </td>
-                <td>{post.users.email}</td>
-                <td>{post.created_at.split("T")[0]}</td>
-              </tr>
-            ))}
+          {posts.map((post) => (
+            <tr key={post.id} className="hover">
+              <th>{post.id}</th>
+              <td>
+                <a href="#" className="link link-hover">
+                  {post.title}
+                </a>
+              </td>
+              <td>{post.users.email}</td>
+              <td>{post.created_at.split("T")[0]}</td>
+            </tr>
+          ))}
           </tbody>
         </table>
       </div>
@@ -88,9 +90,11 @@ function PostListPage() {
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
-        <Link to="/write" className="btn btn-primary">
-          글쓰기
-        </Link>
+        {user && (
+          <Link to="/write" className="btn btn-primary">
+            글쓰기
+          </Link>
+        )}
       </div>
     </div>
   );

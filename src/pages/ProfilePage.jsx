@@ -24,6 +24,12 @@ function ProfilePage() {
             {user.user_metadata.full_name}
           </p>
         )}
+        {user.user_metadata?.nickname && (
+          <p className="mb-2">
+            <span className="font-semibold">Nickname:</span>{" "}
+            {user.user_metadata.nickname}
+          </p>
+        )}
         <button
           className="btn btn-error mt-4"
           onClick={() => {
