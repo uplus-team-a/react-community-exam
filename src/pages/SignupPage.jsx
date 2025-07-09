@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { supabase } from "../libs/supabase";
-import { useUserStore } from "../stores/userStore";
+import {useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {supabase} from "../libs/supabase.js";
+import {useUserStore} from "../stores/userStore";
 
 function SignupPage() {
   const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -69,6 +70,20 @@ function SignupPage() {
             />
           </div>
           <div className="form-control">
+            <label className="label" htmlFor="nickname">
+              <span className="label-text">닉네임</span>
+            </label>
+            <input
+              id="nickname"
+              type="text"
+              className="input input-bordered"
+              placeholder="닉네임을 입력하세요"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-control">
             <label className="label" htmlFor="password">
               <span className="label-text">비밀번호</span>
             </label>
@@ -81,6 +96,7 @@ function SignupPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
+              autocomplete="new-password"
             />
           </div>
           <div className="form-control">
@@ -95,6 +111,7 @@ function SignupPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              autocomplete="new-password"
             />
           </div>
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
@@ -102,7 +119,7 @@ function SignupPage() {
           <div className="form-control mt-6">
             <button className="btn btn-primary" disabled={loading}>
               {loading ? (
-                <span className="loading loading-spinner" />
+                <span className="loading loading-spinner"/>
               ) : (
                 "가입하기"
               )}
