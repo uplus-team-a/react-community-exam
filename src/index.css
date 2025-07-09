@@ -2,3 +2,10 @@
 @plugin "daisyui" {
   themes: light --default, dark, cupcake;
 }
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+
+body {
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+  background: #f9fafb;
+  color: #222;
+}

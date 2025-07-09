@@ -22,6 +22,12 @@ export const fetchPosts = async (page = 1, limit = 20) => {
     )
     .order("id", { ascending: false })
     .range(offset, offset + limit - 1);
+    // SELECT posts.id, posts.title, posts.content, posts.created_at, users.email
+    // FROM posts
+    // JOIN users ON posts.user_id = users.id
+    // ORDER BY posts.id DESC
+    // LIMIT 20
+    // OFFSET 0;
 
   if (error) {
     throw new Error(error.message);
