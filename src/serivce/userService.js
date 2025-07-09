@@ -79,7 +79,7 @@ export const getUsers = async () => {
     .from('users')
     .select('*')
     .is('is_active', true)
-    .order('username', {ascending: true});
+    .order('email', {ascending: true});
 
   return {
     data,
@@ -99,7 +99,7 @@ export const getUserById = async (id) => {
   } = await supabase
     .from('users')
     .select('*')
-    .eq('user_id', id)
+    .eq('id', id)
     .single();
 
   return {
@@ -124,7 +124,7 @@ export const createUser = async (user) => {
       .from('users')
       .insert([
         {
-          user_id: user.id,
+          id: user.id,
           username: user.username,
           email: user.email,
           password: hashedPassword,
@@ -146,6 +146,78 @@ export const createUser = async (user) => {
       error: {
         message: 'Failed to create user: ' + error.message,
         code: 'USER_CREATION_ERROR'
+      }
+    };
+  }
+};
+
+/**
+ * Register a new user with email and password
+ * @param {string} email - User email
+ * @param {string} password - User password
+ * @param {string} nickname - User nickname
+ * @returns {Promise<{data: Object, error: Object}>}
+ */
+export const registerUser = async (email, password, nickname = null) => {
+  try {
+    // Check if email already exists
+    const { data: existingUser, error: checkError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (existingUser) {
+      return {
+        data: null,
+        error: {
+          message: 'Email already in use',
+          code: 'EMAIL_IN_USE'
+        }
+      };
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+    // Generate a UUID for the user
+    const id = crypto.randomUUID();
+
+    const {
+      data,
+      error
+    } = await supabase
+      .from('users')
+      .insert([
+        {
+          id: id,
+          email: email,
+          password: hashedPassword,
+          nickname: nickname,
+          created_at: new Date()
+        }
+      ])
+      .select();
+
+    if (error) {
+      return {
+        data: null,
+        error: {
+          message: 'Failed to register user: ' + error.message,
+          code: 'REGISTRATION_ERROR'
+        }
+      };
+    }
+
+    return {
+      data: data?.[0] || null,
+      error: null
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: {
+        message: 'Failed to register user: ' + error.message,
+        code: 'REGISTRATION_ERROR'
       }
     };
   }
@@ -179,7 +251,7 @@ export const updateUser = async (id, user) => {
     } = await supabase
       .from('users')
       .update(updateData)
-      .eq('user_id', id)
+      .eq('id', id)
       .select();
 
     return {
@@ -209,7 +281,7 @@ export const deleteUser = async (id) => {
       is_active: false,
       modified_at: new Date()
     })
-    .eq('user_id', id);
+    .eq('id', id);
 
   return {error};
 };
@@ -228,7 +300,7 @@ export const authenticateUser = async (id, password) => {
     } = await supabase
       .from('users')
       .select('*')
-      .eq('user_id', id)
+      .eq('id', id)
       .is('is_active', true);
 
     if (userError) {
@@ -291,7 +363,7 @@ export const checkUserIdAvailability = async (id) => {
   } = await supabase
     .from('users')
     .select('*', {count: 'exact'})
-    .eq('user_id', id);
+    .eq('id', id);
 
   if (error) {
     return {
@@ -319,7 +391,7 @@ export const getUsersById = async (ids) => {
   const {data, error} = await supabase
     .from('users')
     .select('*')
-    .in('user_id', ids)
+    .in('id', ids)
     .is('is_active', true);
 
   return {data, error};

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { supabase } from "../libs/supabase";
-import { useUserStore } from "../stores/userStore";
-import { useNavigate } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import useUserStore from "../stores/userStore.js";
+import {authenticateUserByEmail} from "../serivce/userService.js";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -16,10 +16,7 @@ function LoginPage() {
     setError("");
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const {data, error} = await authenticateUserByEmail(email, password);
 
     setLoading(false);
 
@@ -29,7 +26,7 @@ function LoginPage() {
       return;
     }
 
-    useUserStore.getState().setUser(data.user);
+    useUserStore.getState().setUser(data);
     navigate("/");
   };
 
@@ -64,6 +61,7 @@ function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autocomplete="current-password"
             />
           </div>
           {error && (
@@ -72,7 +70,7 @@ function LoginPage() {
           <div className="form-control mt-6">
             <button className="btn btn-primary" disabled={loading}>
               {loading ? (
-                <span className="loading loading-spinner" />
+                <span className="loading loading-spinner"/>
               ) : (
                 "로그인"
               )}
