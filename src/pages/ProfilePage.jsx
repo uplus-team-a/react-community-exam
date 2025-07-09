@@ -1,5 +1,5 @@
 import {Navigate} from "react-router-dom";
-import {useUserStore} from "../stores/userStore";
+import useUserStore from "../stores/userStore.js";
 
 function ProfilePage() {
   const user = useUserStore((s) => s.user);

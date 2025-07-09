@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { supabase } from "../libs/supabase";
-import { useUserStore } from "../stores/userStore";
+import supabase from "../libs/supabase.js";
+import useUserStore from "../stores/userStore.js";
 
 function SignupPage() {
   const [email, setEmail] = useState("");

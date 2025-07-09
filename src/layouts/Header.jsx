@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useUserStore } from "../stores/userStore";
+import useUserStore from "../stores/userStore";
 
 function Header() {
   const user = useUserStore((s) => s.user);

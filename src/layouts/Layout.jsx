@@ -2,7 +2,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { useUserStore } from "../stores/userStore";
+import useUserStore from "../stores/userStore";
 
 function Layout({ children }) {
   const location = useLocation();
