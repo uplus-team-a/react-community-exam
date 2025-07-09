@@ -37,7 +37,6 @@ function SignupPage() {
       return;
     }
 
-    // No email verification needed, directly set user and redirect
     setSuccess("가입 및 로그인 완료!");
     useUserStore.getState().setUser(data);
     setTimeout(() => navigate("/"), 1500);

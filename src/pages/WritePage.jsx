@@ -1,48 +1,60 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useNavigate } from "react-router-dom";
-
-// 1. Zod로 유효성 검사 스키마 정의
-const postSchema = z.object({
-  title: z.string().min(3, "제목은 3글자 이상이어야 합니다."),
-  author: z.string().nonempty("작성자 이름을 입력해주세요."),
-  content: z.string().min(10, "내용은 10글자 이상이어야 합니다."),
-});
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useForm} from "react-hook-form";
+import {useNavigate} from "react-router-dom";
+import {createPost} from "../serivce/postService.js";
+import useFormStore from "../stores/formStore.js";
+import useUserStore from "../stores/userStore.js";
 
 function WritePage() {
   const navigate = useNavigate();
+  const {
+    getSchema,
+    setSubmitting
+  } = useFormStore();
+  const user = useUserStore((state) => state.user);
 
-  // 2. useForm 훅으로 폼 상태 및 함수 가져오기
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: {
+      errors,
+      isSubmitting
+    },
   } = useForm({
-    resolver: zodResolver(postSchema),
+    resolver: zodResolver(getSchema()),
   });
 
-  // 3. 폼 제출 시 실행될 함수 정의 (유효성 검사 통과 후)
   const onSubmit = async (data) => {
     try {
-      const response = await fetch("/posts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // 폼 데이터를 JSON 문자열로 변환하여 body에 담아 전송
-        body: JSON.stringify(data),
-      });
+      if (!user) {
+        alert("로그인 후 이용해 주세요.");
+        navigate("/login");
+        return;
+      }
 
-      if (!response.ok) {
+      setSubmitting(true);
+
+      const postData = {
+        title: data.title,
+        content: data.content,
+        authorId: user.id
+      };
+
+      const {
+        data: _,
+        error
+      } = await createPost(postData);
+
+      if (error) {
         throw new Error("서버에서 게시물 생성에 실패했습니다.");
       }
 
-      // 요청이 성공적으로 완료된 후, 목록 페이지로 이동
-      navigate("/posts");
+      navigate("/");
     } catch (error) {
       console.error("게시물 작성 중 에러 발생:", error);
-      alert("게시물 작성 중 오류가 발생했습니다...");
+      alert("게시물 작성 중 오류가 발생했습니다.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -67,21 +79,6 @@ function WritePage() {
           )}
         </div>
 
-        <div className="form-control">
-          <label className="label" htmlFor="author">
-            <span className="label-text">작성자</span>
-          </label>
-          <input
-            id="author"
-            type="text"
-            placeholder="이름을 입력하세요"
-            className="input input-bordered w-full"
-            {...register("author")}
-          />
-          {errors.author && (
-            <p className="text-red-500 text-xs mt-1">{errors.author.message}</p>
-          )}
-        </div>
 
         <div className="form-control">
           <label className="label" htmlFor="content">
@@ -99,6 +96,7 @@ function WritePage() {
             </p>
           )}
         </div>
+
 
         <button
           type="submit"
