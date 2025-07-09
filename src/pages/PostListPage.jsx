@@ -68,6 +68,7 @@ function PostListPage() {
           </tr>
           </thead>
           <tbody>
+<<<<<<< HEAD
           {posts.map((post) => (
             <tr key={post.id} className="hover">
               <th>{post.id}</th>
@@ -80,6 +81,23 @@ function PostListPage() {
               <td>{post.created_at.split("T")[0]}</td>
             </tr>
           ))}
+=======
+            {posts.map((post) => (
+              <tr key={post.id} className="hover">
+                <th>{post.id}</th>
+                <td>
+                  <Link
+                    to={`/posts/${post.id}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {post.title}
+                  </Link>
+                </td>
+                <td>{post.users.nickname}</td>
+                <td>{post.created_at.split("T")[0]}</td>
+              </tr>
+            ))}
+>>>>>>> cd8b33a (feat : 글 상세 페이지)
           </tbody>
         </table>
       </div>
