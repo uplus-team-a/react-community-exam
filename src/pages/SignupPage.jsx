@@ -28,6 +28,11 @@ function SignupPage() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          nickname: nickname
+        }
+      }
     });
     setLoading(false);
 

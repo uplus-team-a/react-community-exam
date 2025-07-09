@@ -13,9 +13,10 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
     RETURNS trigger AS
 $$
 BEGIN
-    INSERT INTO public.users (id, email, created_at)
+    INSERT INTO public.users (id, email, nickname, created_at)
     VALUES (NEW.id,
             NEW.email,
+            NEW.raw_user_meta_data->>'nickname',
             timezone('utc', now()));
     RETURN NEW;
 END;
