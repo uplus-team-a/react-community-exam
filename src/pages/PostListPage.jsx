@@ -60,28 +60,14 @@ function PostListPage() {
       <div className="overflow-x-auto">
         <table className="table table-zebra w-full">
           <thead>
-          <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>작성일</th>
-          </tr>
+            <tr>
+              <th>번호</th>
+              <th>제목</th>
+              <th>작성자</th>
+              <th>작성일</th>
+            </tr>
           </thead>
           <tbody>
-<<<<<<< HEAD
-          {posts.map((post) => (
-            <tr key={post.id} className="hover">
-              <th>{post.id}</th>
-              <td>
-                <a href="#" className="link link-hover">
-                  {post.title}
-                </a>
-              </td>
-              <td>{post.users.email}</td>
-              <td>{post.created_at.split("T")[0]}</td>
-            </tr>
-          ))}
-=======
             {posts.map((post) => (
               <tr key={post.id} className="hover">
                 <th>{post.id}</th>
@@ -93,11 +79,10 @@ function PostListPage() {
                     {post.title}
                   </Link>
                 </td>
-                <td>{post.users.nickname}</td>
+                <td>{post.users.email}</td>
                 <td>{post.created_at.split("T")[0]}</td>
               </tr>
             ))}
->>>>>>> cd8b33a (feat : 글 상세 페이지)
           </tbody>
         </table>
       </div>
