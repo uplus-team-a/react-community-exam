@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../libs/supabase";
+import { useUserStore } from "../stores/userStore";
 
 function PostDetailPage() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const user = useUserStore((s) => s.user);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -42,7 +44,14 @@ function PostDetailPage() {
       <div className="mb-6 text-sm text-gray-400">
         작성일: {new Date(post.created_at).toLocaleString()}
       </div>
-      <div className="prose">{post.content}</div>
+      <div className="border rounded bg-base-100 p-6 mb-8 min-h-[120px]">
+        {post.content}
+      </div>
+      {user && post.user_id === user.id && (
+        <div className="flex justify-end">
+          <button className="btn btn-primary">수정</button>
+        </div>
+      )}
     </div>
   );
 }
