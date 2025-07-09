@@ -1,38 +1,18 @@
-import {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import {supabase} from "../libs/supabase.js";
-import {useUserStore} from "../stores/userStore";
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { supabase } from "../libs/supabase";
+import { useUserStore } from "../stores/userStore";
 
 function SignupPage() {
   const [email, setEmail] = useState("");
-  const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [nickname, setNickname] = useState("");
 
   const navigate = useNavigate();
-
-  const handleGoogleSignIn = async () => {
-    setError("");
-    setSuccess("");
-    setLoading(true);
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      }
-    });
-
-    setLoading(false);
-
-    if (error) {
-      setError(error.message);
-      console.error("Google 로그인 실패", error);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,10 +29,8 @@ function SignupPage() {
       email,
       password,
       options: {
-        data: {
-          nickname: nickname
-        }
-      }
+        data: { nickname },
+      },
     });
     setLoading(false);
 
@@ -60,6 +38,22 @@ function SignupPage() {
       setError(error.message);
       console.error("회원가입 실패", error);
       return;
+    }
+
+    // 회원정보를 users 테이블에 저장
+    if (data.user) {
+      const { id, email: userEmail } = data.user;
+      const { error: insertError } = await supabase.from("users").insert([
+        {
+          id,
+          email: userEmail,
+          nickname,
+        },
+      ]);
+      if (insertError) {
+        setError("회원정보 저장 실패: " + insertError.message);
+        return;
+      }
     }
 
     // 이메일 인증이 필요한 경우 data.session 이 null 로 옵니다.
@@ -95,20 +89,6 @@ function SignupPage() {
             />
           </div>
           <div className="form-control">
-            <label className="label" htmlFor="nickname">
-              <span className="label-text">닉네임</span>
-            </label>
-            <input
-              id="nickname"
-              type="text"
-              className="input input-bordered"
-              placeholder="닉네임을 입력하세요"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-control">
             <label className="label" htmlFor="password">
               <span className="label-text">비밀번호</span>
             </label>
@@ -121,7 +101,6 @@ function SignupPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              autocomplete="new-password"
             />
           </div>
           <div className="form-control">
@@ -136,7 +115,20 @@ function SignupPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              autocomplete="new-password"
+            />
+          </div>
+          <div className="form-control">
+            <label className="label" htmlFor="nickname">
+              <span className="label-text">닉네임</span>
+            </label>
+            <input
+              id="nickname"
+              type="text"
+              className="input input-bordered"
+              placeholder="닉네임"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              required
             />
           </div>
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
@@ -144,39 +136,12 @@ function SignupPage() {
           <div className="form-control mt-6">
             <button className="btn btn-primary" disabled={loading}>
               {loading ? (
-                <span className="loading loading-spinner"/>
+                <span className="loading loading-spinner" />
               ) : (
                 "가입하기"
               )}
             </button>
           </div>
-
-          <div className="divider">OR</div>
-
-          <div className="form-control">
-            <button 
-              type="button"
-              className="btn btn-outline" 
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-            >
-              {loading ? (
-                <span className="loading loading-spinner" />
-              ) : (
-                // 구글 로그인 버튼
-                <span className="flex items-center justify-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
-                    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
-                    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
-                    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
-                    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
-                  </svg>
-                  Google로 회원가입
-                </span>
-              )}
-            </button>
-          </div>
-
           <p className="text-center text-sm mt-2">
             이미 계정이 있으신가요?{" "}
             <Link className="link link-hover" to="/login">
